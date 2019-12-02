@@ -1,0 +1,46 @@
+CREATE TABLE new_product_info(
+	course_code VARCHAR(20) PRIMARY KEY,
+	course_description_en TEXT,
+	course_description_fr TEXT, 
+	business_type_en VARCHAR(40),
+	business_type_fr VARCHAR(40),
+	provider_en VARCHAR(30),
+	provider_fr VARCHAR(30),
+	displayed_on_gccampus_en VARCHAR(5),
+	displayed_on_gccampus_fr VARCHAR(5),
+	duration FLOAT,
+	main_topic_en VARCHAR(50),
+	main_topic_fr VARCHAR(50),
+	business_line_en VARCHAR(50),
+	business_line_fr VARCHAR(50),
+	required_training_en VARCHAR(5),
+	required_training_fr VARCHAR(5),
+	communities_en VARCHAR(110),
+	communities_fr VARCHAR(110),
+	point_of_contact VARCHAR(80),
+	director VARCHAR(60),
+	program_manager VARCHAR(40),
+	project_lead VARCHAR(40)
+);
+
+
+
+LOAD DATA LOCAL INFILE '/home/ubuntu/Downloads/product_info.csv'
+INTO TABLE new_product_info
+FIELDS OPTIONALLY ENCLOSED BY '"'
+TERMINATED BY ','
+LINES TERMINATED BY '\r\n'
+IGNORE 1 LINES;
+
+
+
+RENAME TABLE product_info TO old_product_info, new_product_info TO product_info;
+
+
+
+DROP TABLE old_product_info;
+
+
+
+# Index
+# None needed

@@ -1,0 +1,59 @@
+Offering Start Date between Mar 31, 2018 11:59:59:99 PM and Mar 31, 2020 11:59:59:99 PM
+original_question includes [
+	Overall Satisfaction, # Only question persisted from old surveys
+	1. Satisfaction Overall,
+	3. Satisfaction - Level of detail of the content,
+	4. Satisfaction - Quality of the content,
+	5. Satisfaction - Language quality of the materials (English or French),
+	6. Satisfaction - Quality of the graphics,
+	7. Satisfaction Ease of navigation,
+	10. Before this learning activity,
+	11. After this learning activity,
+	12. Expectations Met,
+	13. Recommend learning Activity,
+	14. GCCampus Usage,
+	15. Videos,
+	16. Blogs,
+	17. Forums,
+	18. Job aids,
+	20. This learning activity is a valuable use of my time,
+	21. This learning activity is relevant to my job,
+	22. This learning activity is contributing to my performance on the job,
+	23. I can apply what I have learned on the job
+]
+[Evaluation (query)].[Eval - Questions and Answers].[Numerical Answer] IS NOT NULL (advanced filter)
+
+
+
+course_code
+UPPER ([Evaluation (query)].[Eval - Offering Information].[Course Code])
+
+survey_id
+[Evaluation (query)].[Eval - Questions and Answers].[Survey Line ID]
+
+offering_id
+[Evaluation (query)].[Eval - Offering Information].[Offering Identification]
+
+fiscal_year (sort by)
+[Evaluation (query)].[Eval - Offering Start Date].[Offering Start Fiscal Year]
+
+month_en
+[Evaluation (query)].[Eval - Offering Start Date].[Offering Start Month_EN]
+
+month_fr
+[Evaluation (query)].[Eval - Offering Start Date].[Offering Start Month_FR]
+
+learner_classif
+[Evaluation (query)].[Eval - Learner Classification].[Full Classification]
+
+learner_dept
+[Evaluation (query)].[Eval - Learner Department].[Department Name Original from Survey]
+
+original_question
+[Evaluation (query)].[Eval - Questions and Answers].[Short Question_EN]
+
+numerical_answer
+[Evaluation (query)].[Eval - Questions and Answers].[Numerical Answer]
+
+text_answer_en
+[Evaluation (query)].[Eval - Questions and Answers].[Long Answer]

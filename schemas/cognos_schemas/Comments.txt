@@ -1,0 +1,49 @@
+Offering Start Date between Mar 31, 2015 11:59:59:99 PM and Mar 31, 2020 11:59:59:99 PM
+Question_EN excludes [
+	Comments on the facilitator/instructor:
+	Please use the space below to provide additional comments.
+]
+Short Question_EN includes [
+	Comment - application for performance improvement
+	Comment - General
+	Comment - OL Not Available
+	Issue Description
+	Describe technical issues
+	Comments
+	Comments for Improvement
+	2. Satisfaction Overall Comments
+	8. Technical Experience
+	24. Comments you would like to share to help the School improve
+]
+
+
+
+course_code
+UPPER ([Evaluation (query)].[Eval - Offering Information].[Course Code])
+
+survey_id
+[Evaluation (query)].[Eval - Questions and Answers].[Survey Line ID]
+
+offering_id
+[Evaluation (query)].[Eval - Offering Information].[Offering Identification]
+
+fiscal_year (sort by)
+[Evaluation (query)].[Eval - Offering Start Date].[Offering Start Fiscal Year]
+
+quarter (sort by)
+[Evaluation (query)].[Eval - Offering Start Date].[Offering Start Fiscal Quarter Name_EN]
+
+learner_classif
+[Evaluation (query)].[Eval - Learner Classification].[Full Classification]
+
+learner_dept
+[Evaluation (query)].[Eval - Learner Department].[Department Name Original from Survey]
+
+offering_city_en
+IF ([Evaluation (query)].[Eval - Offering Information].[Offering DeliveryType_EN] = 'Online - Self-Paced') THEN ('Online') ELSE ([Evaluation (query)].[Eval - Offering Location].[Offering City])
+
+original_question
+[Evaluation (query)].[Eval - Questions and Answers].[Short Question_EN]
+
+text_answer
+[Evaluation (query)].[Eval - Questions and Answers].[Long Answer]

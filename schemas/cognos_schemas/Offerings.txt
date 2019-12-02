@@ -1,0 +1,86 @@
+OfferingStartDateDwKey between 20180400 and 20210400
+OfferingDeliveryType_EN excludes [
+	Documentation
+	Online - Scheduled (VOID)
+	Online - Self-paced
+]
+
+
+
+offering_id
+[(en-ca) Registration].[Offering].[OfferingIdentification]
+
+course_title_en
+[(en-ca) Registration].[Offering].[CourseTitle_EN]
+
+course_title_fr
+[(en-ca) Registration].[Offering].[CourseTitle_FR]
+
+course_code (sort by)
+UPPER ([(en-ca) Registration].[Offering].[CourseCode])
+
+instructor_names
+IF ([(en-ca) Registration].[Offering].[InstructorName] = 'Unknown') THEN ('') ELSE ([(en-ca) Registration].[Offering].[InstructorName])
+
+confirmed_count
+TOTAL (IF (([(en-ca) Registration].[Miscellaneous].[Registration Status_EN] = 'Confirmed') AND ([(en-ca) Registration].[Registration Fact].[DimScopeDwKey] = 2)) THEN (1) ELSE (0))
+
+cancelled_count
+TOTAL (IF (([(en-ca) Registration].[Miscellaneous].[Registration Status_EN] IN ('Cancelled', 'Cancelled - Class Cancelled')) AND ([(en-ca) Registration].[Registration Fact].[DimScopeDwKey] = 2)) THEN (1) ELSE (0))
+
+waitlisted_count
+TOTAL (IF (([(en-ca) Registration].[Miscellaneous].[Registration Status_EN] = 'Waitlisted') AND ([(en-ca) Registration].[Registration Fact].[DimScopeDwKey] = 2)) THEN (1) ELSE (0))
+
+no_show_count
+TOTAL (IF (([(en-ca) Registration].[Miscellaneous].[RegistrationNoShowFlag] = 1) AND ([(en-ca) Registration].[Registration Fact].[DimScopeDwKey] = 2)) THEN (1) ELSE (0))
+
+business_type
+IF ([(en-ca) Registration].[Offering].[OfferingDeliveryType_EN] IN ('Documentation', 'Online - Scheduled (VOID)', 'Online - Self-Paced')) THEN ('Online') ELSE (IF ([(en-ca) Registration].[Offering].[OfferingDeliveryType_EN] IN ('Classroom', 'Correction', 'Virtual Classroom')) THEN ('Instructor-Led') ELSE(IF ([(en-ca) Registration].[Offering].[OfferingDeliveryType_EN] IN ('Event (in-person)', 'Learning Event(in person)', 'Learning Event (Virtual)*', 'Web Conference (VOID)', 'Webcast (VOID)')) THEN ('Events') ELSE('Error - Check Delivery Type')))
+
+event_description
+IF ([business_type] = 'Events' AND [(en-ca) Registration].[Offering].[(en-ca) EventDescription] <> 'Unknown') THEN ([(en-ca) Registration].[Offering].[(en-ca) EventDescription]) ELSE ('')
+
+fiscal_year
+CASE
+WHEN EXTRACT(MONTH, [start_date]) >=4 THEN CAST(EXTRACT(YEAR, [start_date]), VARCHAR(10)) + '-' + SUBSTRING(CAST(EXTRACT(YEAR, [start_date])+1, VARCHAR(10)), 3, 4)
+ELSE CAST(EXTRACT(YEAR, [start_date])-1, VARCHAR(10)) + '-' + SUBSTRING(CAST(EXTRACT(YEAR, [start_date]), VARCHAR(10)), 3, 4)
+END
+
+quarter
+CASE
+WHEN EXTRACT(MONTH, [start_date]) IN (4, 5, 6) THEN 'Q1'
+WHEN EXTRACT(MONTH, [start_date]) IN (7, 8, 9) THEN 'Q2'
+WHEN EXTRACT(MONTH, [start_date]) IN (10, 11, 12) THEN 'Q3'
+ELSE 'Q4'
+END
+
+start_date (sort by)
+IF ([(en-ca) Registration].[Offering].[OfferingStartDateDwKey] NOT LIKE -1) THEN (_make_timestamp (LEFT ([(en-ca) Registration].[Offering].[OfferingStartDateDwKey],4) , RIGHT (LEFT ([(en-ca) Registration].[Offering].[OfferingStartDateDwKey],6),2) , RIGHT ([(en-ca) Registration].[Offering].[OfferingStartDateDwKey],2))) ELSE (NULL)
+
+end_date
+IF ([(en-ca) Registration].[Offering].[OfferingEndDateDwKey] NOT LIKE -1) THEN (_make_timestamp (LEFT ([(en-ca) Registration].[Offering].[OfferingEndDateDwKey],4) , RIGHT (LEFT ([(en-ca) Registration].[Offering].[OfferingEndDateDwKey],6),2) , RIGHT ([(en-ca) Registration].[Offering].[OfferingEndDateDwKey],2))) ELSE (NULL)
+
+client
+IF ([(en-ca) Registration].[Offering].[(en-ca) Client] = 'Unknown') THEN ('') ELSE ([(en-ca) Registration].[Offering].[(en-ca) Client])
+
+offering_status
+[(en-ca) Registration].[Offering].[(en-ca) OfferingStatus_EN]
+
+offering_language
+SUBSTRING ([(en-ca) Registration].[Offering].[Offering Language], 0, POSITION ('/', [(en-ca) Registration].[Offering].[Offering Language]))
+
+offering_region_en
+IF ([(en-ca) Registration].[OfferingAddress].[OfferingRegionName3_EN] = 'Atlantic Region') THEN ('Atlantic') ELSE (IF ([(en-ca) Registration].[OfferingAddress].[OfferingRegionName3_EN] = 'National Capital Region') THEN ('NCR') ELSE (IF ([(en-ca) Registration].[OfferingAddress].[OfferingRegionName3_EN] = 'Ontario Region' OR [(en-ca) Registration].[OfferingAddress].[OfferingCityName] IN ('STURGEON FALLS', 'CAMBRIDGE', 'BATH')) THEN ('Ontario Region') ELSE (IF ([(en-ca) Registration].[OfferingAddress].[OfferingRegionName3_EN] = 'Pacific and Yukon Region') THEN ('Pacific') ELSE (IF ([(en-ca) Registration].[OfferingAddress].[OfferingRegionName3_EN] = 'Prairies and Northwest Territories') THEN ('Prairie') ELSE (IF ([(en-ca) Registration].[OfferingAddress].[OfferingRegionName3_EN] = 'Québec and Nunavut Region') THEN ('Québec Region') ELSE (IF ([(en-ca) Registration].[OfferingAddress].[OfferingRegionName3_EN] = 'Outside Canada Region') THEN ('Outside Canada') ELSE (IF ([business_type] = 'Online') THEN ('Online') ELSE ([(en-ca) Registration].[OfferingAddress].[OfferingRegionName3_EN]))))))))
+
+offering_region_fr
+IF([offering_region_en] = 'Atlantic') THEN ('Atlantique') ELSE (IF([offering_region_en] = 'NCR') THEN ('RCN') ELSE (IF([offering_region_en] = 'Ontario Region') THEN ('Région d''Ontario') ELSE (IF([offering_region_en] = 'Pacific') THEN ('Pacifique') ELSE (IF([offering_region_en] = 'Prairie') THEN ('Prairie') ELSE (IF([offering_region_en] = 'Québec Region') THEN ('Région du Québec') ELSE (IF([offering_region_en] = 'Online') THEN ('En ligne') ELSE (IF ([offering_region_en] = 'Outside Canada') THEN ('Hors du Canada') ELSE ([offering_region_en]))))))))
+
+offering_province_en
+IF ([business_type] = 'Online') THEN ('Online') ELSE (IF ([(en-ca) Registration].[OfferingAddress].[OfferingCityName] IN ('STURGEON FALLS', 'CAMBRIDGE', 'BATH')) THEN ('Ontario') ELSE(REPLACE (REPLACE ([(en-ca) Registration].[OfferingAddress].[OfferingProvinceName1_EN], 'Ontario_NCR', 'Ontario'), 'Québec_NCR', 'Quebec')))
+
+offering_province_fr
+IF ([business_type] = 'Online') THEN ('En ligne') ELSE (IF ([(en-ca) Registration].[OfferingAddress].[OfferingCityName] IN ('STURGEON FALLS', 'CAMBRIDGE', 'BATH')) THEN ('Ontario') ELSE(IF ([(en-ca) Registration].[OfferingAddress].[OfferingProvinceName1_FR] = 'Dehors Canada') THEN ('Hors du Canada') ELSE (REPLACE (REPLACE ([(en-ca) Registration].[OfferingAddress].[OfferingProvinceName1_FR], 'Ontario_RCN', 'Ontario'), 'Québec_RCN', 'Québec'))))
+
+
+offering_city_en
+IF ([business_type] = 'Online') THEN ('Online') ELSE ([(en-ca) Registration].[OfferingAddress].[OfferingCityName])

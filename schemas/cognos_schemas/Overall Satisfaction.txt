@@ -1,0 +1,13 @@
+Offering Start Date between Mar 31, 2015 11:59:59:99 PM and Mar 31, 2020 11:59:59:99 PM
+Short Question_EN includes [
+	Overall Satisfaction
+	1. Satisfaction Overall
+]
+
+
+
+survey_id
+[Evaluation (query)].[Eval - Questions and Answers].[Survey Line ID]
+
+overall_satisfaction
+IF ([Evaluation (query)].[Eval - Questions and Answers].[Short Question_EN] = 'Overall Satisfaction') THEN ([Evaluation (query)].[Eval - Questions and Answers].[Numerical Answer] * 2) ELSE ([Evaluation (query)].[Eval - Questions and Answers].[Numerical Answer])

@@ -1,0 +1,5 @@
+CREATE TABLE mandatory_courses(
+	dept_code VARCHAR(75),
+	course_code VARCHAR(20),
+	PRIMARY KEY(dept_code, course_code)
+);

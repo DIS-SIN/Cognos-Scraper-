@@ -1,0 +1,58 @@
+# Running on a t2.small instance with AMI ami-0c2a0ac8b164db9e6
+
+sudo apt update
+sudo apt dist-upgrade
+sudo apt install chromium-browser
+sudo apt install mysql-server
+sudo apt install python3-pip
+sudo apt install unzip
+sudo apt install xvfb
+
+cd /usr/bin
+sudo wget https://chromedriver.storage.googleapis.com/2.35/chromedriver_linux64.zip
+sudo unzip chromedriver_linux64.zip
+
+cd ~
+vim .profile
+# set environ vars
+# restart PuTTY to run modified .profile script
+
+# If DB has yet to be configured
+mysql -h $DB_HOST -u $DB_USER -p
+# CREATE DATABASE registhor CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
+# Will need to disable modules compare_row_counts and check_unique_vals as no data yet
+
+cd ~
+git clone https://github.com/DIS-SIN/Cognos-Scraper-.git
+
+cd ~
+mkdir Downloads
+
+cd ~/Cognos-Scraper/
+mkdir logs
+
+cd ~/Cognos-Scraper/comments_scraper
+mkdir pickles
+mkdir processed
+
+cd ~/Cognos-Scraper/offerings_scraper
+mkdir processed
+
+cd ~/Cognos-Scraper/registrations_scraper
+mkdir processed
+
+# From local machine, use secure copy (scp) to send in sentiment_dict.pickle, nlp-key.json, and geo_dict.pickle
+# scp -i "<path to .pem key>" sentiment_dict.pickle ubuntu@ec2-<EC2 public IP with hyphens>.ca-central-1.compute.amazonaws.com:/home/ubuntu/Cognos-Scraper/comments_scraper/pickles/
+# scp -i "<path to .pem key>" nlp-key.json ubuntu@ec2-<EC2 public IP with hyphens>.ca-central-1.compute.amazonaws.com:/home/ubuntu/Cognos-Scraper/comments_scraper/config/
+# scp -i "<path to .pem key>" geo_dict.pickle ubuntu@ec2-<EC2 public IP with hyphens>.ca-central-1.compute.amazonaws.com:/home/ubuntu/Cognos-Scraper/utils/geocoding/pickles/
+
+cd ~/Cognos-Scraper/
+pip3 install -r requirements.txt
+
+sudo timedatectl set-timezone EST
+crontab -e
+# Where '.' is sh equivalent of bash's 'source'
+# 0 2 * * * (. $HOME/.profile && cd /home/ubuntu/Cognos-Scraper && /usr/bin/python3 /home/ubuntu/Cognos-Scraper/application.py) >> /home/ubuntu/cron.log 2>&1
+# Latter command saves messages printed to console to log file; can be removed once up and running
+
+sudo reboot

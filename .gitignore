@@ -1,0 +1,11 @@
+# Files
+environ_vars.txt
+*.log
+nlp-key.json
+TODO.txt
+
+# Directories
+**/__pycache__/
+**/.ipynb_checkpoints/
+**/pickles/
+**/processed/

@@ -1,0 +1,15 @@
+[reg_date] greater than Mar 31, 2018 11:59:59:99 PM
+[dept_code] excludes [
+	Unknown
+]
+
+
+
+dept_code (sort_by)
+[(en-ca) Registration].[Billing Org/Dep (merge)].[(en-ca) OrganizationIlmsCode]
+
+dept_name_en
+[(en-ca) Registration].[Billing Org/Dep (merge)].[(en-ca) OrganizationName_EN]
+
+dept_name_fr
+[(en-ca) Registration].[Billing Org/Dep (merge)].[(en-ca) OrganizationName_FR]

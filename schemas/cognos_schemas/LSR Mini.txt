@@ -1,0 +1,110 @@
+Offering Start Date between Mar 31, 2019 11:59:59:99 PM and Mar 31, 2020 11:59:59:99 PM
+DimScopeDwKey includes 2
+Offering Delivery Type (en) excludes [
+	Event (in-person)
+	Learning Event(in person)
+	Learning Event (Virtual)*
+	Web Conference (VOID)
+	Webcast (VOID)
+]
+Course Code excludes [
+	E171
+	E225
+	E393
+	G221
+	No course code
+	Unknown
+	Z101
+]
+
+
+
+course_title_en
+[(en-ca) Registration].[Offering].[CourseTitle_EN]
+
+course_title_fr
+[(en-ca) Registration].[Offering].[CourseTitle_FR]
+
+course_code
+UPPER ([(en-ca) Registration].[Offering].[CourseCode])
+
+business_type
+IF ([(en-ca) Registration].[Offering].[OfferingDeliveryType_EN] IN ('Documentation', 'Online - Scheduled (VOID)', 'Online - Self-Paced')) THEN ('Online') ELSE (IF ([(en-ca) Registration].[Offering].[OfferingDeliveryType_EN] IN ('Classroom', 'Correction', 'Virtual Classroom')) THEN ('Instructor-Led') ELSE(IF ([(en-ca) Registration].[Offering].[OfferingDeliveryType_EN] IN ('Event (in-person)', 'Learning Event(in person)', 'Learning Event (Virtual)*', 'Web Conference (VOID)', 'Webcast (VOID)')) THEN ('Events') ELSE('Error - Check Delivery Type')))
+
+offering_id
+[(en-ca) Registration].[Offering].[OfferingIdentification]
+
+start_date
+[(en-ca) Registration].[Offer Start Date].[Date]
+
+end_date
+[(en-ca) Registration].[Offer End Date].[Date]
+
+month_en
+[(en-ca) Registration].[Offer Start Date].[MonthName_EN]
+
+month_fr
+[(en-ca) Registration].[Offer Start Date].[MonthName_FR]
+
+client
+IF ([(en-ca) Registration].[Offering].[(en-ca) Client] = 'Unknown') THEN ('') ELSE ([(en-ca) Registration].[Offering].[(en-ca) Client])
+
+offering_status
+[(en-ca) Registration].[Offering].[(en-ca) OfferingStatus_EN]
+
+offering_language
+SUBSTRING ([(en-ca) Registration].[Offering].[Offering Language], 0, POSITION ('/', [(en-ca) Registration].[Offering].[Offering Language]))
+
+offering_region_en
+IF ([(en-ca) Registration].[OfferingAddress].[OfferingRegionName3_EN] = 'Atlantic Region') THEN ('Atlantic') ELSE (IF ([(en-ca) Registration].[OfferingAddress].[OfferingRegionName3_EN] = 'National Capital Region') THEN ('NCR') ELSE (IF ([(en-ca) Registration].[OfferingAddress].[OfferingRegionName3_EN] = 'Ontario Region' OR [(en-ca) Registration].[OfferingAddress].[OfferingCityName] IN ('STURGEON FALLS', 'CAMBRIDGE', 'BATH')) THEN ('Ontario Region') ELSE (IF ([(en-ca) Registration].[OfferingAddress].[OfferingRegionName3_EN] = 'Pacific and Yukon Region') THEN ('Pacific') ELSE (IF ([(en-ca) Registration].[OfferingAddress].[OfferingRegionName3_EN] = 'Prairies and Northwest Territories') THEN ('Prairie') ELSE (IF ([(en-ca) Registration].[OfferingAddress].[OfferingRegionName3_EN] = 'Québec and Nunavut Region') THEN ('Québec Region') ELSE (IF ([(en-ca) Registration].[OfferingAddress].[OfferingRegionName3_EN] = 'Outside Canada Region') THEN ('Outside Canada') ELSE (IF ([business_type] = 'Online') THEN ('Online') ELSE ([(en-ca) Registration].[OfferingAddress].[OfferingRegionName3_EN]))))))))
+
+offering_region_fr
+IF([offering_region_en] = 'Atlantic') THEN ('Atlantique') ELSE (IF([offering_region_en] = 'NCR') THEN ('RCN') ELSE (IF([offering_region_en] = 'Ontario Region') THEN ('Région d''Ontario') ELSE (IF([offering_region_en] = 'Pacific') THEN ('Pacifique') ELSE (IF([offering_region_en] = 'Prairie') THEN ('Prairie') ELSE (IF([offering_region_en] = 'Québec Region') THEN ('Région du Québec') ELSE (IF([offering_region_en] = 'Online') THEN ('En ligne') ELSE (IF ([offering_region_en] = 'Outside Canada') THEN ('Hors du Canada') ELSE ([offering_region_en]))))))))
+
+offering_province_en
+IF ([business_type] = 'Online') THEN ('Online') ELSE (IF ([(en-ca) Registration].[OfferingAddress].[OfferingCityName] IN ('STURGEON FALLS', 'CAMBRIDGE', 'BATH')) THEN ('Ontario') ELSE(REPLACE (REPLACE ([(en-ca) Registration].[OfferingAddress].[OfferingProvinceName1_EN], 'Ontario_NCR', 'Ontario'), 'Québec_NCR', 'Quebec')))
+
+offering_province_fr
+IF ([business_type] = 'Online') THEN ('En ligne') ELSE (IF ([(en-ca) Registration].[OfferingAddress].[OfferingCityName] IN ('STURGEON FALLS', 'CAMBRIDGE', 'BATH')) THEN ('Ontario') ELSE(IF ([(en-ca) Registration].[OfferingAddress].[OfferingProvinceName1_FR] = 'Dehors Canada') THEN ('Hors du Canada') ELSE (REPLACE (REPLACE ([(en-ca) Registration].[OfferingAddress].[OfferingProvinceName1_FR], 'Ontario_RCN', 'Ontario'), 'Québec_RCN', 'Québec'))))
+
+offering_city_en
+IF ([business_type] = 'Online') THEN ('Online') ELSE ([(en-ca) Registration].[OfferingAddress].[OfferingCityName])
+
+learner_province_en
+IF ([(en-ca) Registration].[Learner].[(en-ca) LearnerLocationName] IN ('STURGEON FALLS', 'CAMBRIDGE', 'BATH')) THEN ('Ontario') ELSE (REPLACE (REPLACE ([(en-ca) Registration].[Learner].[LearnerAddressProvinceName1_EN], 'Ontario_NCR', 'Ontario'), 'Québec_NCR', 'Quebec'))
+
+learner_province_fr
+IF ([(en-ca) Registration].[Learner].[(en-ca) LearnerLocationName] IN ('STURGEON FALLS', 'CAMBRIDGE', 'BATH')) THEN ('Ontario') ELSE (IF ([(en-ca) Registration].[Learner].[LearnerAddressProvinceName1_FR] = 'Dehors Canada') THEN ('Hors du Canada') ELSE (REPLACE (REPLACE ([(en-ca) Registration].[Learner].[LearnerAddressProvinceName1_FR], 'Ontario_RCN', 'Ontario'), 'Québec_RCN', 'Québec')))
+
+learner_city_en
+[(en-ca) Registration].[Learner].[(en-ca) LearnerLocationName]
+
+reg_id
+REPLACE ([(en-ca) Registration].[Registration Fact].[RegistrationBusId], 'regdw', '')
+
+reg_status
+[(en-ca) Registration].[Miscellaneous].[Registration Status_EN]
+
+no_show
+[(en-ca) Registration].[Miscellaneous].[RegistrationNoShowFlag]
+
+learner_id
+[(en-ca) Registration].[Learner].[DimLearnerDwKey]
+
+learner_language
+IF ([(en-ca) Registration].[Learner].[LearnerLanguageCode] = 'EN') THEN ('English') ELSE (IF ([(en-ca) Registration].[Learner].[LearnerLanguageCode] = 'FR') THEN ('French') ELSE ([(en-ca) Registration].[Learner].[LearnerLanguageCode]))
+
+learner_classif
+[(en-ca) Registration].[Learner].[JobClassificationFull]
+
+billing_dept_name_en
+[(en-ca) Registration].[Billing Org/Dep (merge)].[(en-ca) OrganizationName_EN]
+
+billing_dept_name_fr
+[(en-ca) Registration].[Billing Org/Dep (merge)].[(en-ca) OrganizationName_FR]
+
+billing_dept_code
+[(en-ca) Registration].[Billing Org/Dep (merge)].[(en-ca) OrganizationIlmsCode]
+
+current_dept_code
+[(en-ca) Registration].[Current Org/Dep (merge)].[(en-ca) OrganizationIlmsCode]
